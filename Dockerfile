@@ -4,7 +4,7 @@ FROM node:latest
 COPY package*.json ./
 
 # Install npm production packages 
-RUN npm install --production
+RUN npm install
 
 COPY . /opt/app-root/src
 

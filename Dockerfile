@@ -1,12 +1,16 @@
 FROM node:latest
 
-WORKDIR /usr/src/app
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-COPY package.json ./
+# Install npm production packages 
+RUN npm install --production
 
-RUN npm install
+COPY . /opt/app-root/src
 
-COPY . .
+ENV NODE_ENV production
+ENV PORT 3000
 
-EXPOSE 4000
-CMD [ "node", "index.js" ]
+EXPOSE 3000
+
+CMD ["npm", "start"]

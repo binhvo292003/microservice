@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Git Stage') {
             steps {
-                git branch: 'main', url: 'https://github.com/binhvo292003/microservice.git'
+                git branch: 'cicd', url: 'https://github.com/binhvo292003/microservice.git'
             }
         }
 

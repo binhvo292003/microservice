@@ -1,6 +1,7 @@
 import React from 'react';
 import FormSignIn from '../../components/common/formSignIn';
 import { Link } from 'react-router-dom';
+import FormSignUp from '../../components/common/formSignUp';
 
 export default function Signup() {
     return (
@@ -20,9 +21,8 @@ export default function Signup() {
                         </Link>
                     </p>
                 </div>
-                <div className="flex justify-center">
-                    <FormSignIn />
-                </div>
+                <FormSignUp />
+                
             </div>
         </div>
     );

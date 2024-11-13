@@ -4,9 +4,9 @@ const app = express();
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Review Service' });
+    res.json({ message: 'Whs' });
 });
 
 app.listen(8004, () => {
-    console.log('Review Service is listening on port 8004');
+    console.log('Whs Service is listening on port 8004');
 });

@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import FormSignIn from '../../components/common/formSignIn';
-
-const initialState = {
-    email: '',
-    password: '',
-};
 
 export default function Login() {
     return (
@@ -25,9 +20,7 @@ export default function Login() {
                         </Link>
                     </p>
                 </div>
-                <div className="flex justify-center">
                     <FormSignIn />
-                </div>
             </div>
         </div>
     );

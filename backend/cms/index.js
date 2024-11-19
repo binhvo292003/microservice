@@ -10,3 +10,11 @@ app.get('/', (req, res) => {
 app.listen(8003, () => {
     console.log('CMS is listening on port 8003');
 });
+
+const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
+
+app.use('/', indexRouter);
+app.use('/auth', authRouter);
+
+

@@ -5,7 +5,6 @@ const db = require('../db');
 // Exports all the functions to perform on the db
 module.exports = {
     create,
-    find,
     findOneById,
     findOneByUsername,
     findOnePasswordByUsername,
@@ -13,29 +12,10 @@ module.exports = {
     update,
 };
 
-async function find(options = {}) {
-    try {
-        const statement =
-            'SELECT * FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id';
-        const values = [];
-
-        const result = await db.query(statement, values);
-
-        if (result.rows?.length) {
-            return result.rows;
-        }
-
-        return [];
-    } catch (err) {
-        throw err;
-    }
-}
-
 async function findOneById(customerId) {
     try {
         // Generate SQL statement
-        const statement =
-            'SELECT * FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id AND customer.customer_id = $1';
+        const statement = 'SELECT * FROM customer WHERE customer_id = $1';
         const values = [customerId];
 
         // Execute SQL statment
@@ -54,29 +34,8 @@ async function findOneById(customerId) {
 async function findOneByUsername(username) {
     try {
         // Generate SQL statement
-        const statement =
-            'SELECT * FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id AND customer.username = $1';
+        const statement = 'SELECT * FROM customer WHERE customer.username = $1';
         const values = [username];
-
-        // Execute SQL statment
-        const result = await db.query(statement, values);
-
-        if (result.rows?.length) {
-            return result.rows[0];
-        }
-
-        return null;
-    } catch (err) {
-        throw err;
-    }
-}
-
-async function findOneByEmail(email) {
-    try {
-        // Generate SQL statement
-        const statement =
-            'SELECT * FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id AND customer.email_address = $1';
-        const values = [email];
 
         // Execute SQL statment
         const result = await db.query(statement, values);
@@ -111,39 +70,40 @@ async function findOnePasswordByUsername(username) {
     }
 }
 
-async function create(data, user_type = 'loc') {
+async function findOneByEmail(email) {
     try {
-        ///-------------  TO DO ----------------
-        const {
-            first_name,
-            middle_name,
-            last_name,
-            email_address,
-            username,
-            password,
-            address_street_no,
-            address_street_name,
-            address_city,
-            address_state,
-            address_postal_code,
-            address_country_code,
-        } = data;
+        // Generate SQL statement
+        const statement = 'SELECT * FROM customer WHERE email_address = $1';
+        const values = [email];
+
+        // Execute SQL statment
+        const result = await db.query(statement, values);
+
+        if (result.rows?.length) {
+            return result.rows[0];
+        }
+
+        return null;
+    } catch (err) {
+        throw err;
+    }
+}
+
+async function create(data) {
+    try {
+        let { first_name, middle_name, last_name, email_address, username, password } = data;
         const timestamp = new Date();
         const created_at = timestamp.toISOString();
+
+        first_name = first_name ? first_name : 'N/A';
+        middle_name = middle_name ? middle_name : 'N/A';
+        last_name = last_name ? last_name : 'N/A';
 
         await db.query('BEGIN');
         // Generate SQL statement
         let statement =
-            'INSERT INTO customer (first_name, middle_name, last_name, email_address, username, user_type, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING customer_id, first_name, middle_name, last_name, email_address, username, user_type,created_at';
-        let values = [
-            first_name,
-            middle_name,
-            last_name,
-            email_address,
-            username,
-            user_type,
-            created_at,
-        ];
+            'INSERT INTO customer (first_name, middle_name, last_name, email_address, username, created_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING customer_id, first_name, middle_name, last_name, email_address, username,created_at';
+        let values = [first_name, middle_name, last_name, email_address, username, created_at];
         // Execute SQL statment
         const result = await db.query(statement, values);
 
@@ -154,26 +114,12 @@ async function create(data, user_type = 'loc') {
         // Execute SQL statment
         const loginId = await db.query(statement, values);
 
-        // Generate SQL statement
-        statement =
-            'INSERT INTO customer_address (customer_id, address_street_no, address_street_name, address_city, address_state, address_postal_code, address_country_code) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING address_id';
-        values = [
-            result.rows[0].customer_id,
-            address_street_no,
-            address_street_name,
-            address_city,
-            address_state,
-            address_postal_code,
-            address_country_code,
-        ];
-        // Execute SQL statment
-        const addressId = await db.query(statement, values);
-
-        if (result.rows?.length && loginId.rows?.length && addressId.rows?.length) {
+        if (result.rows?.length && loginId.rows?.length) {
             await db.query('COMMIT');
 
             // Returns full data record incl. address information
             //return result.rows[0];
+            console.log('test: ', result.rows[0].customer_id);
             return await findOneById(result.rows[0].customer_id);
         }
 
@@ -187,24 +133,7 @@ async function create(data, user_type = 'loc') {
 
 async function update(data) {
     try {
-        const {
-            id,
-            customer_id,
-            first_name,
-            middle_name,
-            last_name,
-            email_address,
-            // created_at, no update
-            // username, no update of username possible
-            // user_type, no update
-            address_id,
-            address_street_no,
-            address_street_name,
-            address_city,
-            address_state,
-            address_postal_code,
-            address_country_code,
-        } = data;
+        const { id, customer_id, first_name, middle_name, last_name, email_address } = data;
 
         // Make sure req body data belongs to req params
         if (parseInt(id) !== parseInt(customer_id)) throw { message: 'Parameter mismatch request' };
@@ -214,21 +143,6 @@ async function update(data) {
         let statement =
             'UPDATE customer SET first_name = $1, middle_name = $2, last_name = $3, email_address = $4 WHERE customer_id = $5';
         let values = [first_name, middle_name, last_name, email_address, customer_id];
-        // Execute SQL statment
-        await db.query(statement, values);
-
-        // Generate SQL statement
-        statement =
-            'UPDATE customer_address SET address_street_no = $1, address_street_name = $2, address_city = $3, address_state = $4, address_postal_code = $5, address_country_code = $6  WHERE address_id = $7';
-        values = [
-            address_street_no,
-            address_street_name,
-            address_city,
-            address_state,
-            address_postal_code,
-            address_country_code,
-            address_id,
-        ];
         // Execute SQL statment
         await db.query(statement, values);
 

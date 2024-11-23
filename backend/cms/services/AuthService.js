@@ -8,7 +8,8 @@ const saltRounds = 14;
 module.exports = { register, login };
 
 async function register(data) {
-    const { username, email_address } = data;
+    const { username, email_address, password } = data;
+
 
     try {
         // Check if username already exists
@@ -26,9 +27,9 @@ async function register(data) {
             throw createError(409, 'Email already in use');
         }
 
-        // User doesn't exist, create new user record and hash password
-        const hashedPassword = await bcrypt.hash(data.password, saltRounds);
-        return await customerController.create({ ...data, password: hashedPassword }, 'loc');
+        console.log(`Username: ${username}, Password: ${password}, Salt: ${saltRounds}`);
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return await customerController.create({ ...data, password: hashedPassword });
     } catch (err) {
         throw err;
     }

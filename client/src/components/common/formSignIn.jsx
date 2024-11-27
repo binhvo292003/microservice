@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/authService';
+import { data } from 'autoprefixer';
 
 export default function FormSignIn() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -16,10 +18,20 @@ export default function FormSignIn() {
         }));
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         console.log('Sign-in data:', formData);
-        // navigate('/dashboard');
+        try {
+            const response = await login({ loginData: formData });
+            console.log('Response:', response);
+            if (response.status === 200) {
+                navigate('/dashboard');
+            } else {
+                console.error('Incorrect username or password');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
         setFormData({
             email: '',
             password: '',

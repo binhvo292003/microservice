@@ -13,9 +13,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(helmet());
 
-app.use("/api", verifyUser, routes);
-app.get('/', (req, res) =>{
-  res.json("CMS API");
-});
+app.use("/api", routes);
 
 module.exports = app;

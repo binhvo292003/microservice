@@ -15,7 +15,7 @@ router.post('/register', async (req, res, next) => {
 });
 
 // Login Endpoint
-router.post('/login', passport.authenticate('local'), async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
     //router.post("/login", async (req, res, next) => {
     try {
         const { username, password } = req.body;

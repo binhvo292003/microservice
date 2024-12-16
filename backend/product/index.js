@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
 
-const PORT = 8002;
-
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Product Service' });
+    res.json({ message: 'Whs' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Product Service is listening on port ${PORT}`);
+app.listen(8004, () => {
+    console.log('Whs Service is listening on port 8004');
 });

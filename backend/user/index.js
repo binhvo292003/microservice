@@ -8,5 +8,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8001, () => {
-    console.log('POS is listening on port 8001');
+    console.log('User is listening on port 8001');
 });

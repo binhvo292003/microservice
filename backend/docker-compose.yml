@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+    api-gateway:
+        build: ./api-gateway
+        ports:
+            - '8000:8000'
+        depends_on:
+            - user
+            - error-handling
+            - cart
+            - product
+            - inventory
+            - payment
+
+    user:
+        build: ./user
+        ports:
+            - '8001:8001'
+
+    error-handling:
+        build: ./error-handling
+        ports:
+            - '8002:8002'
+
+    cart:
+        build: ./cart
+        ports:
+            - '8003:8003'
+
+    product:
+        build: ./product
+        ports:
+            - '8004:8004'
+
+    inventory:
+        build: ./inventory
+        ports:
+            - '8005:8005'
+
+    payment:
+        build: ./payment
+        ports:
+            - '8006:8006'

@@ -8,5 +8,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8004, () => {
-    console.log('Whs Service is listening on port 8004');
+    console.log('Product Service is listening on port 8004');
 });

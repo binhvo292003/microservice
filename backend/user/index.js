@@ -1,12 +1,9 @@
-const express = require('express');
-const app = express();
+const app = require('./src/app');
 
-app.use(express.json());
-
-app.get('/', (req, res) => {
-    res.json({ message: 'POS' });
+const server = app.listen(8001, () => {
+    console.log(`User is listening on port 8001`);
 });
 
-app.listen(8001, () => {
-    console.log('User is listening on port 8001');
+process.on('SIGINT', () => {
+    server.close(() => console.log(`exits server express`));
 });

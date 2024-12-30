@@ -1,12 +1,18 @@
+// server.js
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const app = express();
+const PORT = process.env.PORT || 8001;
 
-app.use(express.json());
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.json({ message: 'POS' });
-});
+app.use('/', require('./routes/userRoute'))
 
-app.listen(8001, () => {
-    console.log('User is listening on port 8001');
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

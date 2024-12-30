@@ -1,9 +1,19 @@
-const app = require('./src/app');
 
-const server = app.listen(8001, () => {
-    console.log(`User is listening on port 8001`);
-});
+// server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-process.on('SIGINT', () => {
-    server.close(() => console.log(`exits server express`));
+const app = express();
+const PORT = process.env.PORT || 8001;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/', require('./routes/userRoute'))
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

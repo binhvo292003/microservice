@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers');
+const userLimiter = require('../middleware/rateLimiter'); // Adjust the path as needed
+
+// Apply the rate limiter to user routes
+router.use(userLimiter);
 
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getUserById);

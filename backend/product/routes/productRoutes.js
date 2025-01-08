@@ -6,8 +6,12 @@ const {
   updateProduct,
   deleteProduct,
 } = require('../controllers/productController');
+const productLimiter = require('../middleware/rateLimiter'); // Adjust the path as needed
 
 const router = express.Router();
+
+// Apply the rate limiter to product routes
+router.use(productLimiter);
 
 // Get all products
 router.get('/', getAllProducts);

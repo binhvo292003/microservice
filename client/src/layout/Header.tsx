@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 const midLinks = [
-    { title: 'Catalog', path: '/catalog' },
+    { title: 'Product', path: '/product' },
     { title: 'About', path: '/about' },
     { title: 'Contact', path: '/contact' },
 ];

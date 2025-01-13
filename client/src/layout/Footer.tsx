@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
     return (
-        <footer className="bg-slate-200 py-4">
+        <footer className="bg-slate-200 py-4 min-h-40">
             <div className="w-full px-16 flex justify-between items-center">
                 <p className="text-sm text-gray-600">
                     &copy; 2023 BuyFit. All rights reserved.

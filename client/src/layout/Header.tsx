@@ -4,18 +4,18 @@ import { Link } from 'react-router-dom';
 import {
     NavigationMenu,
     NavigationMenuList,
-    NavigationMenuLink,
+    NavigationMenuLink
 } from '@/components/ui/navigation-menu';
 
 const midLinks = [
     { title: 'Product', path: '/product' },
-    { title: 'About', path: '/about' },
-    { title: 'Contact', path: '/contact' },
+    { title: 'Profile', path: '/profile' },
+    { title: 'Cart', path: '/cart' }
 ];
 
 const rightLinks = [
-    { title: 'login', path: '/login' },
-    { title: 'register', path: '/register' },
+    { title: 'Sign In', path: '/signin' },
+    { title: 'Sign Upr', path: '/signup' }
 ];
 
 export default function Header() {
@@ -36,8 +36,7 @@ export default function Header() {
                         {midLinks.map(({ title, path }) => (
                             <Link
                                 to={path}
-                                className="flex w-full items-center py-2 text-lg font-semibold"
-                            >
+                                className="flex w-full items-center py-2 text-lg font-semibold">
                                 {title}
                             </Link>
                         ))}
@@ -62,8 +61,7 @@ export default function Header() {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         to={path}
-                                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-                                    >
+                                        className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50">
                                         {title}
                                     </Link>
                                 </NavigationMenuLink>
@@ -74,8 +72,7 @@ export default function Header() {
                 {rightLinks.map(({ title, path }) => (
                     <Link
                         to={path}
-                        className="hidden lg:flex items-center py-2 text-lg font-semibold"
-                    >
+                        className="hidden lg:flex items-center py-2 text-lg font-semibold">
                         <Button>{title}</Button>
                     </Link>
                 ))}
@@ -96,8 +93,7 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
-            strokeLinejoin="round"
-        >
+            strokeLinejoin="round">
             <line x1="4" x2="20" y1="12" y2="12" />
             <line x1="4" x2="20" y1="6" y2="6" />
             <line x1="4" x2="20" y1="18" y2="18" />

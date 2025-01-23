@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers');
-const userLimiter = require('../middleware/rateLimiter'); // Adjust the path as needed
+const rateLimiter = require('../middleware/rateLimiter');
 
-// Apply the rate limiter to user routes
-router.use(userLimiter);
+// Google OAuth2 routes
+router.get('/auth/google', userController.googleAuth);
+router.get('/auth/google/callback', userController.googleAuthCallback);
+router.get('/profile', userController.getProfile);
 
-router.get('/', userController.getAllUsers);
-router.get('/:id', userController.getUserById);
-router.post('/', userController.createUser);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
+// Apply rate limiter to sensitive routes
+router.use(rateLimiter);
+
+// Other user-related routes
+router.get('/users', userController.getAllUsers);
 
 module.exports = router;

@@ -13,7 +13,7 @@ export default function SignInPage() {
 
     const handleGoogleSignIn = () => {
         // Add your Google sign-in logic here
-        console.log('Sign in with Google');
+        window.location.href = 'http://localhost:8000/user/api/auth/google'; // Redirect to the API Gateway route
     };
 
     const handleFacebookSignIn = () => {

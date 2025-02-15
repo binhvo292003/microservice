@@ -4,11 +4,19 @@ const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const routes = require('./routes');
+const cors = require('cors');
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+
+const corsOptions = {
+    origin: 'http://localhost:8000',
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Configure the Google strategy
 passport.use(

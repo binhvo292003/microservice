@@ -1,44 +1,64 @@
-version: '3.8'
-
 services:
+    postgres:
+        image: postgres:latest
+        container_name: 'postgres-db'
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: postgres
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        ports:
+            - "5432:5432"   
+        volumes:
+            - ./data:/var/lib/postgresql/data
+            - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+    user:
+        build: ./user
+        ports:
+            - '8001:8001'
+        depends_on:
+            - postgres
+
+
     api-gateway:
         build: ./api-gateway
         ports:
             - '8000:8000'
         depends_on:
             - user
-            - error-handling
-            - cart
-            - product
-            - inventory
-            - payment
+            # - error-handling
+            # - cart
+            # - product
+            # - inventory
+            # - payment
 
-    user:
-        build: ./user
-        ports:
-            - '8001:8001'
 
-    error-handling:
-        build: ./error-handling
-        ports:
-            - '8002:8002'
+    # error-handling:
+    #     build: ./error-handling
+    #     ports:
+    #         - '8002:8002'
 
-    cart:
-        build: ./cart
-        ports:
-            - '8003:8003'
+    # cart:
+    #     build: ./cart
+    #     ports:
+    #         - '8003:8003'
 
-    product:
-        build: ./product
-        ports:
-            - '8004:8004'
+    # product:
+    #     build: ./product
+    #     ports:
+    #         - '8004:8004'
 
-    inventory:
-        build: ./inventory
-        ports:
-            - '8005:8005'
+    # inventory:
+    #     build: ./inventory
+    #     ports:
+    #         - '8005:8005'
 
-    payment:
-        build: ./payment
-        ports:
-            - '8006:8006'
+    # payment:
+    #     build: ./payment
+    #     ports:
+    #         - '8006:8006'

@@ -6,6 +6,7 @@ import SignInPage from '@/page/auth/SignInPage';
 import SignUpPage from '@/page/auth/SignUpPage';
 import ProfilePage from '@/page/profile/ProfilePage';
 import CartPage from '@/page/cart/CartPage';
+import RequireAuth from '@/middleware/RequireAuth';
 
 export const router = createBrowserRouter([
     {
@@ -16,8 +17,16 @@ export const router = createBrowserRouter([
             { path: 'signin', element: <SignInPage /> },
             { path: 'signup', element: <SignUpPage /> },
             { path: 'product', element: <ProductPage /> },
-            { path: 'profile', element: <ProfilePage /> },
-            { path: 'cart', element: <CartPage /> },
+            {
+                path: 'profile',
+                element: <RequireAuth />, // Protect profile page
+                children: [{ path: '', element: <ProfilePage /> }]
+            },
+            {
+                path: 'cart',
+                element: <RequireAuth />, // Protect cart page
+                children: [{ path: '', element: <CartPage /> }]
+            },
             { path: '*', element: <Navigate replace to="/" /> }
         ]
     }

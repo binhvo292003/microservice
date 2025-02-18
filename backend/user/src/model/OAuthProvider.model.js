@@ -1,14 +1,22 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-class Session extends Model {}
+class OAuthProvider extends Model {}
 
-Session.init(
+OAuthProvider.init(
     {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
+        },
+        provider: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        provider_id: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         user_id: {
             type: DataTypes.UUID,
@@ -19,21 +27,13 @@ Session.init(
             },
             onDelete: 'CASCADE',
         },
-        refresh_token: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-        },
-        expires_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
     },
     {
         sequelize,
-        modelName: 'Session',
-        tableName: 'sessions',
+        modelName: 'OAuthProvider',
+        tableName: 'oauth_providers',
         timestamps: false,
     }
 );
 
-module.exports = Session;
+module.exports = OAuthProvider;

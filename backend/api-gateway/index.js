@@ -13,7 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use('/user', proxy('http://localhost:8001'));
+app.use('/user', proxy('http://user-service:8001'));
 // app.use('/error-handling', proxy('http://localhost:8002'));
 // app.use('/cart', proxy('http://localhost:8003'));
 // app.use('/product', proxy('http://localhost:8004'));

@@ -11,15 +11,20 @@ let refreshTokens = [];
 
 // Generate token
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-        expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-    });
+    return jwt.sign(
+        { id: user.id, email: user.email, role: user.Role.name }, // Include role
+        JWT_SECRET,
+        { expiresIn: ACCESS_TOKEN_EXPIRES_IN }
+    );
 };
 
+
 const generateRefreshToken = async (user) => {
-    const refreshToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-        expiresIn: REFRESH_TOKEN_EXPIRES_IN,
-    });
+    const refreshToken = jwt.sign(
+        { id: user.id, email: user.email, role: user.Role.name },
+        JWT_SECRET,
+        { expiresIn: REFRESH_TOKEN_EXPIRES_IN }
+    );
 
     await Session.create({
         user_id: user.id,
@@ -41,11 +46,12 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
         const customerRole = await Role.findOne({ where: { name: 'Customer' } });
 
+        console.log("customerRole", customerRole);
         const newUser = await User.create({
             email,
             full_name,
             password_hash: hashedPassword,
-            customerRole,
+            role_id: customerRole.id,
         });
 
         res.status(201).json({ message: 'User registered successfully', user: newUser });
@@ -59,18 +65,23 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: { email },
+            include: { model: Role },
+        });
+
         if (!user || !bcrypt.compareSync(password, user.password_hash))
             return res.status(401).json({ message: 'Invalid credentials' });
 
         const accessToken = generateAccessToken(user);
         const refreshToken = await generateRefreshToken(user);
 
-        res.json({ accessToken, refreshToken });
+        res.json({ accessToken, refreshToken, role: user.Role.name });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // Token Refresh
 exports.refreshToken = async (req, res) => {
@@ -115,32 +126,43 @@ exports.googleAuthCallback = async (req, res, next) => {
         if (!googleUser) return res.status(401).json({ message: 'Authentication failed' });
 
         try {
-            // Check if user exists in the database
-            let user = await User.findOne({ where: { email: googleUser.emails[0].value } });
+            let user = await User.findOne({
+                where: { email: googleUser.emails[0].value },
+                include: { model: Role }, 
+            });
 
             if (!user) {
                 const customerRole = await Role.findOne({ where: { name: 'Customer' } });
 
-                // Create new user if first-time login
                 user = await User.create({
                     email: googleUser.emails[0].value,
                     full_name: googleUser.displayName,
                     profile_picture: googleUser.photos[0].value,
-                    role_id: customerRole, // Assign role if needed
+                    role_id: customerRole.id, // Assign default role
+                });
+
+                // Fetch role again for consistency
+                user = await User.findOne({
+                    where: { id: user.id },
+                    include: { model: Role },
                 });
             }
 
-            // Generate tokens
             const accessToken = generateAccessToken(user);
             const refreshToken = await generateRefreshToken(user);
 
-            // Redirect to frontend with tokens
-            res.json({ message: 'Google login successful', accessToken, refreshToken });
+            res.json({
+                message: 'Google login successful',
+                accessToken,
+                refreshToken,
+                role: user.Role.name,
+            });
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     })(req, res, next);
 };
+
 
 // Fetch user profile after authentication
 exports.getProfile = (req, res) => {

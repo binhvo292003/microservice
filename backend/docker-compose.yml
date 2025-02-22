@@ -23,6 +23,8 @@ services:
     user:
         container_name: 'user-service'
         build: ./user
+        env_file:
+            - ./user/.env
         networks:
             - my_network
         depends_on:
